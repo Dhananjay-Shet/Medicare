@@ -11,6 +11,10 @@ object Repository {
     val doctorAppointment = MutableLiveData<List<Approval>>(emptyList<Approval>())
     val patientAppointment = MutableLiveData<List<Appointment>>(emptyList<Appointment>())
 
+    fun getCurrentUser(): FirebaseUser? {
+        return FirebaseInstance.getCurrentUser()
+    }
+
     // doctor
     fun getDoctorProfile(){
         FirebaseInstance.getDoctorProfile(callback = { dP ->

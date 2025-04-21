@@ -51,16 +51,10 @@ fun Doctor_HomePage(logout: () -> Unit, profile: () -> Unit, approve: () -> Unit
 
     val context = LocalContext.current
     val expanded = rememberSaveable { mutableStateOf(false) }
-    val auth = FirebaseAuth.getInstance()
-    var userName = rememberSaveable { mutableStateOf("Guest") }
+    val currentUser = Repository.getCurrentUser()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     LaunchedEffect(Unit) {
-        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            userName.value = user?.displayName ?: "Guest"
-        }
-        auth.addAuthStateListener(listener)
         Repository.getDoctorProfile()
         Repository.getApproval()
         Repository.getDoctorAppointment()
@@ -70,7 +64,7 @@ fun Doctor_HomePage(logout: () -> Unit, profile: () -> Unit, approve: () -> Unit
         contentWindowInsets = WindowInsets.safeContent,
         topBar = {
             TopAppBar(
-                title = {Row(verticalAlignment = Alignment.CenterVertically){Text("Hello, Dr. ${userName.value}", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Bold)
+                title = {Row(verticalAlignment = Alignment.CenterVertically){Text("Hello, Dr. ${currentUser?.displayName?:"Guest"}", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Bold)
                     Icon(painter = painterResource(R.drawable.stethoscope), contentDescription = "Health Icon",modifier = Modifier.size(30.dp).padding(start=5.dp),tint = Color.Unspecified)}},
                 actions = {
                     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(5.dp)){

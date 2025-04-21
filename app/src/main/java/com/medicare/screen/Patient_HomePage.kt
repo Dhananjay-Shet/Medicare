@@ -33,9 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,8 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.medicare.R
 import com.medicare.data.FirebaseInstance
 import com.medicare.data.Repository
@@ -61,16 +57,10 @@ fun Patient_HomePage(logout : () -> Unit, profile: () -> Unit, book: () -> Unit,
 
     val context = LocalContext.current
     val expanded = rememberSaveable { mutableStateOf(false) }
-    val auth = FirebaseAuth.getInstance()
-    var userName = rememberSaveable { mutableStateOf("Guest") }
+    val currentUser = Repository.getCurrentUser()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     LaunchedEffect(Unit) {
-        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            userName.value = user?.displayName ?: "Guest"
-        }
-        auth.addAuthStateListener(listener)
         Repository.retrieveProfile()
         Repository.getPatientAppointment()
     }
@@ -79,7 +69,7 @@ fun Patient_HomePage(logout : () -> Unit, profile: () -> Unit, book: () -> Unit,
         contentWindowInsets = WindowInsets.safeContent,
         topBar = {
             TopAppBar(
-                title = {Row(verticalAlignment = Alignment.CenterVertically){Text("Hello, ${userName.value}", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Bold)
+                title = {Row(verticalAlignment = Alignment.CenterVertically){Text("Hello, ${currentUser?.displayName ?: "Guest"}", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Bold)
                     Icon(painter = painterResource(R.drawable.healthy), contentDescription = "Health Icon",modifier = Modifier.size(30.dp).padding(start=5.dp),tint = Color.Unspecified)}},
                 actions = {
                     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(5.dp)){

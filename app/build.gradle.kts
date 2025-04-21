@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId =
-            "com.medicare"
+            "com.Medicare"
         minSdk =
             26
         targetSdk =

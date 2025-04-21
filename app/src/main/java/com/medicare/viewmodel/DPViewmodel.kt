@@ -1,17 +1,9 @@
 package com.medicare.viewmodel
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseUser
-import com.medicare.data.FirebaseInstance
 import com.medicare.data.Profile
 import com.medicare.data.Repository
-import java.util.Calendar
 
 
 class DPViewmodel: ViewModel() {

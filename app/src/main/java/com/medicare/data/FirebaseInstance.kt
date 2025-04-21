@@ -19,12 +19,18 @@ import java.time.format.DateTimeFormatter
 object FirebaseInstance {
 
     private val auth by lazy { Firebase.auth }
-    private val currentUser = auth.currentUser
+    private var currentUser = auth.currentUser
     private val authUI by lazy { AuthUI.getInstance() }
     private val database by lazy { Firebase.database }
     private val detailsRef by lazy { database.getReference("details") }
     private val doctorRef by lazy { database.getReference("doctor") }
     private val patientRef by lazy { database.getReference("patient") }
+
+    init {
+        auth.addAuthStateListener { firebaseAuth ->
+            currentUser = firebaseAuth.currentUser
+        }
+    }
 
     fun isCurrentUserNull(): Boolean {
         return currentUser == null
